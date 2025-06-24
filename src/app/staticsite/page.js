@@ -1,12 +1,15 @@
 'use client';
-const FunFactPage = async ()=>{
-    const res = await fetch('https://api.chucknorris.io/jokes/random',{
+import { useState, useEffect } from 'react';
 
-        next: {revalidate: 10000}
-    
-});
-const fact = await res.json();
+const FunFactPage = () => {
+  const [fact, setFact] = useState({ value: '' });
+  const [menuOpen, setMenuOpen] = useState(false);
 
+  useEffect(() => {
+    fetch('https://api.chucknorris.io/jokes/random')
+      .then(res => res.json())
+      .then(data => setFact(data));
+  }, []);
 
   return (
     <div className="bg-gray-900">
@@ -22,16 +25,18 @@ const fact = await res.json();
                 <a href="/login" className="text-gray-300 hover:text-blue-600 px-3 py-2 rounded-md text-md font-medium">Login</a>
                 <a href="/register" className="text-gray-300 hover:text-blue-600 px-3 py-2 rounded-md text-md font-medium">Register</a>
                 <a href="#" className="text-gray-300 hover:text-blue-600 px-3 py-2 rounded-md text-md font-medium">About</a>
-
                 <a href="#" className="text-gray-300 hover:text-blue-600 px-3 py-2 rounded-md text-md font-medium">Contact</a>
-          <a href="#" className="inline-block px-5 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-lg font-semibold transition">Learn More</a>
-
-
-                
+                <a href="#" className="inline-block px-5 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-lg font-semibold transition">Learn More</a>
               </div>
             </div>
             <div className="md:hidden">
-              <button type="button" className="text-gray-400 hover:text-white focus:outline-none focus:text-white" data-collapse-toggle="mobile-menu" aria-controls="mobile-menu" aria-expanded="false">
+              <button
+                type="button"
+                className="text-gray-400 hover:text-white focus:outline-none focus:text-white"
+                aria-controls="mobile-menu"
+                aria-expanded={menuOpen}
+                onClick={() => setMenuOpen(!menuOpen)}
+              >
                 <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                     d="M4 6h16M4 12h16M4 18h16" />
@@ -40,14 +45,19 @@ const fact = await res.json();
             </div>
           </div>
         </div>
-        <div className="md:hidden hidden" id="mobile-menu">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <a href="#" className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">Home</a>
-            <a href="#" className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">Programs</a>
-            <a href="#" className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">About</a>
-            <a href="#" className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">Contact</a>
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div className="md:hidden" id="mobile-menu">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              <a href="#" className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">Home</a>
+              <a href="/login" className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">Login</a>
+              <a href="/register" className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">Register</a>
+              <a href="#" className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">About</a>
+              <a href="#" className="block text-gray-300 hover:text-white px-3 py-2 rounded-md text-base font-medium">Contact</a>
+              <a href="#" className="block px-5 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-lg font-semibold transition text-white">Learn More</a>
+            </div>
           </div>
-        </div>
+        )}
       </nav>
 
       <section className="relative bg-[url('/image/professional-female-swimmer-points-away-blank-space.jpg')] bg-cover bg-center h-screen flex items-center justify-center">
@@ -91,17 +101,16 @@ const fact = await res.json();
         </div>
       </section>
 
-     
       <section className="py-16 bg-blue-600">
         <div className="max-w-3xl mx-auto text-center text-white px-6">
           <h2 className="text-3xl font-bold mb-4">Ready to Make a Splash?</h2>
           <p className="mb-8">Sign up today and start your journey towards becoming a better swimmer.</p>
           <a href="#" className="inline-block px-8 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-gray-100 transition">Join Now</a>
         </div>
-        <p>{fact.value}</p>
+        <p className="text-center text-white mt-6">{fact.value}</p>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default FunFactPage
+export default FunFactPage;
